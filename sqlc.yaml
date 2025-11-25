@@ -7,3 +7,6 @@ sql:
           go:
               package: "database"
               out: "/internal/database/"
+              overrides:
+                  - column: "blogs.tags"
+                    go_type: "encoding/json.RawMessage"

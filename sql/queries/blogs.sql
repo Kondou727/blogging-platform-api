@@ -1,6 +1,7 @@
 -- name: CreateBlog :one
-INSERT INTO blogs (title, content, tags)
+INSERT INTO blogs (title, content, category, tags)
 VALUES (
+    ?,
     ?,
     ?,
     ?

@@ -5,14 +5,16 @@
 package database
 
 import (
-	"database/sql"
+	"encoding/json"
+	"time"
 )
 
 type Blog struct {
 	ID        int64
 	Title     string
 	Content   string
-	Tags      sql.NullString
-	Createdat sql.NullTime
-	Updatedat sql.NullTime
+	Category  string
+	Tags      json.RawMessage
+	Createdat time.Time
+	Updatedat time.Time
 }

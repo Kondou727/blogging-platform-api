@@ -7,32 +7,40 @@ package database
 
 import (
 	"context"
-	"database/sql"
+	"encoding/json"
 )
 
 const createBlog = `-- name: CreateBlog :one
-INSERT INTO blogs (title, content, tags)
+INSERT INTO blogs (title, content, category, tags)
 VALUES (
+    ?,
     ?,
     ?,
     ?
 )
-RETURNING id, title, content, tags, createdat, updatedat
+RETURNING id, title, content, category, tags, createdat, updatedat
 `
 
 type CreateBlogParams struct {
-	Title   string
-	Content string
-	Tags    sql.NullString
+	Title    string
+	Content  string
+	Category string
+	Tags     json.RawMessage
 }
 
 func (q *Queries) CreateBlog(ctx context.Context, arg CreateBlogParams) (Blog, error) {
-	row := q.db.QueryRowContext(ctx, createBlog, arg.Title, arg.Content, arg.Tags)
+	row := q.db.QueryRowContext(ctx, createBlog,
+		arg.Title,
+		arg.Content,
+		arg.Category,
+		arg.Tags,
+	)
 	var i Blog
 	err := row.Scan(
 		&i.ID,
 		&i.Title,
 		&i.Content,
+		&i.Category,
 		&i.Tags,
 		&i.Createdat,
 		&i.Updatedat,
