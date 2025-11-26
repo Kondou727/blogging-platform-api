@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/Kondou727/blogging-platform-api/internal/database"
 )
@@ -147,8 +148,14 @@ func (cfg *apiConfig) getAllBlogsHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	term := strings.ToLower(r.URL.Query().Get("term"))
 	var jsonBlogs []blogResp
 	for _, blog := range blogs {
+		if term != "" {
+			if !(strings.Contains(strings.ToLower(blog.Title), term) || strings.Contains(strings.ToLower(blog.Category), term) || strings.Contains(strings.ToLower(blog.Content), term)) {
+				continue
+			}
+		}
 		jsonBlogs = append(jsonBlogs, blogResp{
 			ID:        int(blog.ID),
 			Title:     blog.Title,
@@ -157,6 +164,10 @@ func (cfg *apiConfig) getAllBlogsHandler(w http.ResponseWriter, r *http.Request)
 			CreatedAt: blog.Createdat,
 			UpdatedAt: blog.Updatedat,
 		})
+	}
+	if jsonBlogs == nil {
+		respondWithJSON(w, http.StatusNotFound, errResp{Error: "no blogs found"})
+		return
 	}
 	respondWithJSON(w, http.StatusOK, jsonBlogs)
 }
