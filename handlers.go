@@ -87,7 +87,7 @@ func (cfg *apiConfig) updateBlogHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	respondWithJSON(w, http.StatusCreated, blogResp{
+	respondWithJSON(w, http.StatusOK, blogResp{
 		ID:        int(blog.ID),
 		Title:     blog.Title,
 		Category:  blog.Category,
@@ -95,4 +95,21 @@ func (cfg *apiConfig) updateBlogHandler(w http.ResponseWriter, r *http.Request) 
 		CreatedAt: blog.Createdat,
 		UpdatedAt: blog.Updatedat,
 	})
+}
+func (cfg *apiConfig) deleteBlogHandler(w http.ResponseWriter, r *http.Request) {
+	blogID, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		log.Printf("failed to get ID: %s", err)
+		respondWithJSON(w, http.StatusBadRequest, errResp{Error: err.Error()})
+		return
+	}
+
+	title, _ := cfg.BlogsDBQueries.DeleteBlog(r.Context(), int64(blogID))
+	if title == "" {
+		log.Println("blog not found")
+		respondWithJSON(w, http.StatusNotFound, errResp{Error: "blog not found"})
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
 }

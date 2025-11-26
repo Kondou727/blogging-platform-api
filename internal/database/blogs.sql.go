@@ -48,6 +48,19 @@ func (q *Queries) CreateBlog(ctx context.Context, arg CreateBlogParams) (Blog, e
 	return i, err
 }
 
+const deleteBlog = `-- name: DeleteBlog :one
+DELETE FROM blogs
+WHERE id = ?
+RETURNING title
+`
+
+func (q *Queries) DeleteBlog(ctx context.Context, id int64) (string, error) {
+	row := q.db.QueryRowContext(ctx, deleteBlog, id)
+	var title string
+	err := row.Scan(&title)
+	return title, err
+}
+
 const updateBlog = `-- name: UpdateBlog :one
 UPDATE blogs
 SET title = ?, content = ?, category = ?, tags = ?, updatedAt = current_timestamp

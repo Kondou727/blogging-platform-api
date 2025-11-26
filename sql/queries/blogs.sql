@@ -13,3 +13,8 @@ UPDATE blogs
 SET title = ?, content = ?, category = ?, tags = ?, updatedAt = current_timestamp
 WHERE id = ?
 RETURNING *;
+
+-- name: DeleteBlog :one
+DELETE FROM blogs
+WHERE id = ?
+RETURNING title;
