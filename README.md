@@ -34,4 +34,6 @@ By default runs on ```localhost:8080``` (hardcoded lol)
 ```
 
 ## Additional Info
+Used SQlite for database, goose for managing migrations and sqlc for working with sql queries. Everything else is standard stuff.
+
 Feel free to use this for any purpose, but the code quality is pretty bad so I wouldn't recommend it ^^
