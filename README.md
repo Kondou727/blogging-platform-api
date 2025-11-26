@@ -2,7 +2,7 @@
 
 Practice project written in Go based on https://roadmap.sh/projects/blogging-platform-api.
 
-Do not use this as reference to how to structure a Go project.
+Do not use this as reference to structure a Go project.
 
 ## Installation
 
