@@ -7,3 +7,9 @@ VALUES (
     ?
 )
 RETURNING *;
+
+-- name: UpdateBlog :one
+UPDATE blogs
+SET title = ?, content = ?, category = ?, tags = ?, updatedAt = current_timestamp
+WHERE id = ?
+RETURNING *;

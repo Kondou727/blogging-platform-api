@@ -24,6 +24,7 @@ func main() {
 	apiCfg := apiConfig{BlogsDB: db, BlogsDBQueries: dbQueries}
 
 	mux.HandleFunc("POST /posts", apiCfg.createBlogHandler)
+	mux.HandleFunc("PUT /posts/{id}", apiCfg.updateBlogHandler)
 	server := http.Server{Handler: mux, Addr: ":8080"}
 	log.Println("starting server...")
 	log.Fatal(server.ListenAndServe())
