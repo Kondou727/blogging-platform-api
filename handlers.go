@@ -138,3 +138,25 @@ func (cfg *apiConfig) getBlogHandler(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt: blog.Updatedat,
 	})
 }
+
+func (cfg *apiConfig) getAllBlogsHandler(w http.ResponseWriter, r *http.Request) {
+	blogs, err := cfg.BlogsDBQueries.GetAllBlogs(r.Context())
+	if err != nil {
+		log.Printf("failed to get blogs: %s", err)
+		respondWithJSON(w, http.StatusInternalServerError, errResp{Error: err.Error()})
+		return
+	}
+
+	var jsonBlogs []blogResp
+	for _, blog := range blogs {
+		jsonBlogs = append(jsonBlogs, blogResp{
+			ID:        int(blog.ID),
+			Title:     blog.Title,
+			Category:  blog.Category,
+			Tags:      blog.Tags,
+			CreatedAt: blog.Createdat,
+			UpdatedAt: blog.Updatedat,
+		})
+	}
+	respondWithJSON(w, http.StatusOK, jsonBlogs)
+}

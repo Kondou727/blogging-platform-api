@@ -61,6 +61,41 @@ func (q *Queries) DeleteBlog(ctx context.Context, id int64) (string, error) {
 	return title, err
 }
 
+const getAllBlogs = `-- name: GetAllBlogs :many
+SELECT id, title, content, category, tags, createdat, updatedat FROM blogs
+`
+
+func (q *Queries) GetAllBlogs(ctx context.Context) ([]Blog, error) {
+	rows, err := q.db.QueryContext(ctx, getAllBlogs)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Blog
+	for rows.Next() {
+		var i Blog
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Content,
+			&i.Category,
+			&i.Tags,
+			&i.Createdat,
+			&i.Updatedat,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getBlog = `-- name: GetBlog :one
 SELECT id, title, content, category, tags, createdat, updatedat FROM blogs
 WHERE id = ?

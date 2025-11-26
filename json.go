@@ -34,7 +34,7 @@ func respondWithJSON(w http.ResponseWriter, code int, payload any) {
 
 }
 
-func decodeJSON(req *http.Request, params interface{}) error {
+func decodeJSON(req *http.Request, params any) error {
 	decoder := json.NewDecoder(req.Body)
 	err := decoder.Decode(&params)
 	return err

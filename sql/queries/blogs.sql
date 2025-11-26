@@ -22,3 +22,6 @@ RETURNING title;
 -- name: GetBlog :one
 SELECT * FROM blogs
 WHERE id = ?;
+
+-- name: GetAllBlogs :many
+SELECT * FROM blogs;

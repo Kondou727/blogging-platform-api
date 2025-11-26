@@ -27,6 +27,7 @@ func main() {
 	mux.HandleFunc("PUT /posts/{id}", apiCfg.updateBlogHandler)
 	mux.HandleFunc("DELETE /posts/{id}", apiCfg.deleteBlogHandler)
 	mux.HandleFunc("GET /posts/{id}", apiCfg.getBlogHandler)
+	mux.HandleFunc("GET /posts", apiCfg.getAllBlogsHandler)
 
 	server := http.Server{Handler: mux, Addr: ":8080"}
 	log.Println("starting server...")
