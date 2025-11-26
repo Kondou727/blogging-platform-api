@@ -61,6 +61,26 @@ func (q *Queries) DeleteBlog(ctx context.Context, id int64) (string, error) {
 	return title, err
 }
 
+const getBlog = `-- name: GetBlog :one
+SELECT id, title, content, category, tags, createdat, updatedat FROM blogs
+WHERE id = ?
+`
+
+func (q *Queries) GetBlog(ctx context.Context, id int64) (Blog, error) {
+	row := q.db.QueryRowContext(ctx, getBlog, id)
+	var i Blog
+	err := row.Scan(
+		&i.ID,
+		&i.Title,
+		&i.Content,
+		&i.Category,
+		&i.Tags,
+		&i.Createdat,
+		&i.Updatedat,
+	)
+	return i, err
+}
+
 const updateBlog = `-- name: UpdateBlog :one
 UPDATE blogs
 SET title = ?, content = ?, category = ?, tags = ?, updatedAt = current_timestamp

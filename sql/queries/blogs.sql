@@ -18,3 +18,7 @@ RETURNING *;
 DELETE FROM blogs
 WHERE id = ?
 RETURNING title;
+
+-- name: GetBlog :one
+SELECT * FROM blogs
+WHERE id = ?;
